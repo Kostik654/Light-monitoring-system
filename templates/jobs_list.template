@@ -1,0 +1,25 @@
+#ATTENTION: DO NOT USE MORE THAN 3 SPACES IN A JOB NAME (4 SPACES IS BEING USED IN PARSING)
+#ALSO DO NOT START THE LINE WITH THE SPACE CHAR - THE LINE WILL BE IGNORED BY PARSER
+#COMMENT CHAR: #, !
+#IPV6 IS NOT SUPPORTED
+
+# [common_urls_module]    URL    Check SSL(ssl/ignore_ssl)    Job Name    ExpectedCodes-X-Y or *    timeout (or * default 5sec)    interval or *(60)    chat_id
+
+[common_urls_module]    https://www.google.com/    ssl    Check Google    *    3    120    0
+
+
+# [sip_module]    Rem/Loc IPv4    Port    Job Name    ExpectedCodes-X-Y or *    timeout (or - default 15sec)    interval or *(60)    chat_id
+#[sip_module]    10.10.0.254    5060    My Telephone Job    200-404-401    15    300    1
+
+
+# [mongo_nodule]    Rem/Loc IPv4    Port    Role(only <primary> for now)    Job Name    timeout (or default 5sec)    interval or (68)    chat_id
+#[mongo_module]    10.10.0.253    27817    primary    mymongodb1 revision    *    15    2
+
+
+# [socket_module]    Rem/Loc IPv4    List [Port: Name: ExceptedCodes-X-Y or *] or *(just ping)    Job Name    timeout (or * - default 5sec)    interval or *(60)    chat_id
+#[socket_module]    18.10.0.252    88:myNginx:111-11,25565: My Minecraft Server:*    host_ports_job    *    30    3
+
+# [backbones_module]    URL    Check SSL(ssl/ignore_ssl)    Job Name    Expected Content (str)    ExpectedCodes-X-Y or *    timeout (or * default 5sec)    interval or *(60)    chat_id
+#[backbones_module]    http://10.10.1.200:8081/api/status/    ignore_ssl    MyApp    ok    200    *    5    2
+
+# [custom_module] (GLOBAL ARC)    IN DEV
