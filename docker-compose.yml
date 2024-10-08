@@ -1,0 +1,10 @@
+version: '3.1'
+
+services:
+  monitors:
+    build: .
+    image: litems:latest
+    container_name: "monitoring-system"
+    restart: "no"
+    volumes:
+      - /etc/monsys:/etc/monsys
