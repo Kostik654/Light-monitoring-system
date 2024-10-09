@@ -65,11 +65,11 @@ class UrlJob(Job):
                 if self.scan_html_body(resp):
                     err_type = -1  # no error
                     is_passed = True
-                    message_ = f"✅ OK\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\tCODE: {self.last_status_code}\tRESP: {resp}"
+                    message_ = f"✅ OK\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\tCODE: {self.last_status_code}\nRESP: {resp}"
 
                 else:
                     err_type = 1  # bad response
-                    message_ = f"⚠️ WARNING\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\tCODE: {self.last_status_code}"
+                    message_ = f"⚠️ WARNING\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\nCODE: {self.last_status_code}\nBAD RESP: {resp}"
 
             else:
                 err_type = 2
