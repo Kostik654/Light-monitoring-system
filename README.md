@@ -14,23 +14,3 @@
 - SOCKET-модуль для проверки доступности сетевых служб хоста, либо самого хоста
 
 Службу можно развернуть на хостах разных подсетей для мониторинга целевого объекта из разных точек локальной сети.
-
-## Внимание
-Эта система мониторинга является экспериментальной и предназначена только для образовательных или исследовательских целей. Используйте её на свой страх и риск. Автор не несет ответственности за любые последствия, связанные с использованием данной системы.
-
-## Отказ от ответственности
-Этот проект предоставляется "как есть", без каких-либо явных или подразумеваемых гарантий. Автор не несет ответственности за любые убытки или последствия, возникающие в результате использования данного программного обеспечения.
-
-## Условия использования
-Пользователь обязуется не использовать данную систему для ведения незаконной или вредоносной деятельности.
-
----
-
-## Attention
-This monitoring system is experimental and intended for educational or research purposes only. Use it at your own risk. The author is not responsible for any consequences related to the use of this system.
-
-## Disclaimer
-This project is provided "as is" without any express or implied warranties. The author is not liable for any damages or consequences arising from the use of this software.
-
-## Terms of Use
-The user agrees not to use this system for any illegal or malicious activities.
