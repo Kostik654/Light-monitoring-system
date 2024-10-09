@@ -18,14 +18,16 @@ class UrlJob(Job):
                  interval_t: int,
                  exp_answer_: str = None,
                  exp_codes: list[int] = None,
-                 default_chat_id_: int = 0):
+                 default_chat_id_: int = 0,
+                 tg_tag_: str = "*"):
 
         super().__init__(name_=sname_,
                          type_=stype_,
                          interval_time=interval_t,
                          awtime=awtime,
                          exp_codes=exp_codes,
-                         chat_id_=default_chat_id_)
+                         chat_id_=default_chat_id_,
+                         tg_tag_=tg_tag_)
 
         self.url = url
         self.ssl_verification = ssl_verify
@@ -174,6 +176,9 @@ class UrlJob(Job):
                 return
 
             self.problems_counter(is_success)
+
+            if not self.tg_tag.__eq__("*") and not is_success:
+                message_ += f"\n{self.tg_tag}"
 
             LogItOut(message_=message_,
                      for_tg=self.is_for_tg(error_t),

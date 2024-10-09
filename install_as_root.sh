@@ -2,6 +2,7 @@
 
 set -e
 
+rm -rf /etc/monsys
 mkdir /etc/monsys
 
 cp ./templates/jobs_list.template /etc/monsys/jobs_list

@@ -22,14 +22,16 @@ class MongoJob(Job):
                  awtime: int = 5,
                  interval_t: int = 60,
                  mrole:str = 'primary',
-                 default_chat_id_: int = 0
+                 default_chat_id_: int = 0,
+                 tg_tag_: str = "*"
                  ):
 
         super().__init__(name_=sname_,
                          type_=stype_,
                          interval_time=interval_t,
                          awtime=awtime,
-                         chat_id_=default_chat_id_)
+                         chat_id_=default_chat_id_,
+                         tg_tag_=tg_tag_)
 
         self.remote_ipv4_address = ipv4_address_
         self.remote_port = port_
@@ -128,6 +130,9 @@ class MongoJob(Job):
                 prev_failed = self.last_failed
 
                 self.problems_counter() #  self.last_failed = True
+
+                if not self.tg_tag.equals("*"):
+                    message_ += f"\n{self.tg_tag}"
 
                 LogItOut(message_=message_,
                          for_tg=not prev_failed,
