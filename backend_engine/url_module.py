@@ -177,7 +177,7 @@ class UrlJob(Job):
 
             self.problems_counter(is_success)
 
-            if not self.tg_tag.equals("*") and not is_success:
+            if not self.tg_tag.__eq__("*") and not is_success:
                 message_ += f"\n{self.tg_tag}"
 
             LogItOut(message_=message_,
