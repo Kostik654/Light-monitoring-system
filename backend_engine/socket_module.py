@@ -157,6 +157,9 @@ class SocketJob(Job):
 
                 self.problems_counter()  # self.last_failed = True
 
+                if not self.tg_tag.equals("*"):
+                    message_ += f"\n{self.tg_tag}"
+
                 LogItOut(message_=message_,
                          for_tg=not prev_failed,
                          add_timestamp=prev_failed,

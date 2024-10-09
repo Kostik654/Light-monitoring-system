@@ -19,13 +19,14 @@ class Job:
     }
     all_occured_problems: int = 0
 
-    def __init__(self, name_: str, type_: str, interval_time: int, awtime: int, exp_codes: list[int] = None, chat_id_:int = 0):
+    def __init__(self, name_: str, type_: str, interval_time: int, awtime: int, exp_codes: list[int] = None, chat_id_: int = 0, tg_tag_: str = "*"):
         self.job_name: str = name_
         self.job_type: str = type_
         self.req_interval_time: int = interval_time
         self.await_time: int = awtime
         self.expected_codes: list[int] = exp_codes
         self.default_chat_id: int = chat_id_
+        self.tg_tag: str = tg_tag_
 
         self.last_failed: bool = False
         self.response_time: float = -1  # secs,ms

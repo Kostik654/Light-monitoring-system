@@ -73,7 +73,8 @@ class JobManager(JobManagerAbs):
                      exp_codes=expected_cds,
                      awtime=timeout,
                      interval_t=interval,
-                     default_chat_id_=int(job_splitted[7])
+                     default_chat_id_=int(job_splitted[7],
+                     tg_tag_=job_splitted[8])
                      )
         if job_splitted[0].__eq__('[common_urls_module]'):
             self.__url_jobs.append(job)
@@ -102,7 +103,8 @@ class JobManager(JobManagerAbs):
                      exp_codes=expected_cds,
                      awtime=timeout,
                      interval_t=interval,
-                     default_chat_id_=int(job_splitted[8])
+                     default_chat_id_=int(job_splitted[8],
+                     tg_tag_=job_splitted[9])
                      )
         self.__backbone_jobs.append(job)
 
@@ -128,7 +130,8 @@ class JobManager(JobManagerAbs):
                      exp_codes=expected_cds,
                      awtime=timeout,
                      interval_t=interval,
-                     default_chat_id_=int(job_splitted[7])
+                     default_chat_id_=int(job_splitted[7],
+                     tg_tag_=job_splitted[8])
                      )
         self.__sip_jobs.append(job)
 
@@ -149,7 +152,8 @@ class JobManager(JobManagerAbs):
                      sname_=job_splitted[4],
                      awtime=timeout,
                      interval_t=interval,
-                     default_chat_id_=int(job_splitted[7])
+                     default_chat_id_=int(job_splitted[7],
+                     tg_tag_=job_splitted[8])
                      )
         self.__mongo_jobs.append(job)
 
@@ -170,7 +174,8 @@ class JobManager(JobManagerAbs):
                      sname_=job_splitted[3],
                      awtime=timeout,
                      interval_t=interval,
-                     default_chat_id_=int(job_splitted[6])
+                     default_chat_id_=int(job_splitted[6],
+                     tg_tag_=job_splitted[7])
                      )
         self.__socket_jobs.append(job)
 
