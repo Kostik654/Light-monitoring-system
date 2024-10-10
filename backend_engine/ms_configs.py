@@ -1,5 +1,4 @@
 
-
 class TgBotPosterData:
 
     is_tg_enabled: bool = True
@@ -13,10 +12,16 @@ class TgBotPosterData:
     postfix: str = '\n[MSio]'
 
     is_queue: bool = False
-    pause_time: int = 2 #secs
+    pause_time: int = 2  # secs
 
 
 class ServiceData:
 
+    ms_version: str = "1.0.1"
     highlighter_pause: int = 7200
     highlighter_problems_pause: int = 900
+
+    metrics_ipv4: str = "127.0.0.1"
+    metrics_port: int = 65400
+
+    is_export_enabled: bool = False

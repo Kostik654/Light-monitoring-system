@@ -1,7 +1,9 @@
 import signal
 import sys
 import asyncio
+import uvicorn
 from asyncio import sleep, AbstractEventLoop
+from flask import Flask, Response
 
 from common_methods import GetExpectedCodes
 from logger import LogItOut
@@ -47,9 +49,15 @@ def load_configuration(file_path: str = ".env") -> bool:
         TgBotPosterData.postfix = f"\n{conf_strs[2].split('=')[1]}"
         TgBotPosterData.is_tg_enabled = conf_strs[3].split('=')[1].__eq__('True')
 
-        ServiceData.is_highlighter_enabled = conf_strs[4].split('=')[1].__eq__('True')
+        TgBotPosterData.is_highlighter_enabled = conf_strs[4].split('=')[1].__eq__('True')
+
         ServiceData.highlighter_pause = int(conf_strs[5].split('=')[1])
         ServiceData.highlighter_problems_pause = int(conf_strs[6].split('=')[1])
+
+        ServiceData.is_export_enabled = conf_strs[7].split('=')[1].__eq__('True')
+
+        ServiceData.metrics_ipv4 = conf_strs[8].split('=')[1].split(':')[0]
+        ServiceData.metrics_port = conf_strs[8].split('=')[1].split(':')[1]
 
         LogItOut(message_=f'Service configuration is loaded',
                  for_tg=False,
@@ -122,7 +130,7 @@ async def main():
 
         manager.start_jobs()
 
-        LogItOut(message_=f'\n🟢 STARTED: {sum_} jobs\n{modules_}',
+        LogItOut(message_=f'\n🟢 STARTED: {sum_} jobs\n{modules_}\nv{ServiceData.ms_version}',
                  for_tg=True,
                  chat_lvl_=0)
 
