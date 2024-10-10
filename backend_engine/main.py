@@ -3,12 +3,12 @@ import sys
 import asyncio
 import uvicorn
 from asyncio import sleep, AbstractEventLoop
-from flask import Flask, Response
 
 from common_methods import GetExpectedCodes
 from logger import LogItOut
 from job_manager import JobManager
 from ms_configs import TgBotPosterData, ServiceData
+from export_app import app
 
 
 urls_path = '/etc/monsys/jobs_list'
@@ -133,6 +133,12 @@ async def main():
         LogItOut(message_=f'\n🟢 STARTED: {sum_} jobs\n{modules_}\nv{ServiceData.ms_version}',
                  for_tg=True,
                  chat_lvl_=0)
+
+        if ServiceData.is_export_enabled:
+            try:
+                uvicorn.run(app, host=ServiceData.metrics_ipv4, port=ServiceData.metrics_port)
+            except Exception as e:
+                LogItOut(message_=f"Exporter running exception: {e.__str__()}", for_tg=False)
 
         while (True):
             await sleep(10)
