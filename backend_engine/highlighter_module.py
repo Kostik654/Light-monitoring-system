@@ -13,6 +13,7 @@ from job_module import Job
 
 from job_manager_abc import JobManagerAbs
 
+
 async def highlighter(job_mgr: JobManagerAbs):
 
     start_time: str = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
