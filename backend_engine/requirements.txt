@@ -4,3 +4,4 @@ psutil==6.0.0
 flask==3.0.3
 quart==0.19.6
 jsonify==0.5
+uvicorn==0.31.1
