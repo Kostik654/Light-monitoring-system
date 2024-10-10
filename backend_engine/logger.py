@@ -28,6 +28,6 @@ def LogItOut(message_: str,
         # to file
         try:
             with open(log_path, 'a') as file:
-                file.write(f"{message_}\t{datetime.datetime.now()}")
+                file.write(f"{message_}\t{datetime.datetime.now()}\n")
         except Exception as e:
             print(f"Exception occurred while reading {log_path} file [Adding strs]\n{e.__str__()}")
