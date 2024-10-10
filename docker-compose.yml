@@ -8,3 +8,4 @@ services:
     restart: "no"
     volumes:
       - /etc/monsys:/etc/monsys
+      - /var/log/monsys:/var/log/monsys
