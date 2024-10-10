@@ -57,7 +57,7 @@ def load_configuration(file_path: str = ".env") -> bool:
         ServiceData.is_export_enabled = conf_strs[7].split('=')[1].__eq__('True')
 
         ServiceData.metrics_ipv4 = conf_strs[8].split('=')[1].split(':')[0]
-        ServiceData.metrics_port = conf_strs[8].split('=')[1].split(':')[1]
+        ServiceData.metrics_port = int(conf_strs[8].split('=')[1].split(':')[1])
 
         LogItOut(message_=f'Service configuration is loaded',
                  for_tg=False,

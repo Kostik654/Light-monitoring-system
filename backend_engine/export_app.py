@@ -1,4 +1,4 @@
-from quart import Quart, jsonify
+from quart import Quart
 
 app = Quart(__name__)
 
@@ -7,7 +7,7 @@ app = Quart(__name__)
 async def metrics():
 
     #  TEST DATA
-    
+
     data = {
         "metric_1": 123,
         "metric_2": 456,
