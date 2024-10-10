@@ -6,6 +6,8 @@ services:
     image: litems:latest
     container_name: "monitoring-system"
     restart: "no"
+    ports:
+      - "65400:65400"
     volumes:
       - /etc/monsys:/etc/monsys
       - /var/log/monsys:/var/log/monsys

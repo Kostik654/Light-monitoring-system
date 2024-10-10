@@ -93,9 +93,6 @@ def get_urls(file_path: str = "urls.txt"):
 
 async def main():
 
-    if not load_configuration(env_path):
-        work_error(message_="Configuration uploading error. Check logs.")
-
     loop = asyncio.get_event_loop()
     enable_signals(loop)
 
@@ -136,9 +133,13 @@ async def main():
 
         if ServiceData.is_export_enabled:
             try:
-                uvicorn.run(app, host=ServiceData.metrics_ipv4, port=ServiceData.metrics_port)
+                config = uvicorn.Config(app, host=ServiceData.metrics_ipv4, port=ServiceData.metrics_port)
+                server = uvicorn.Server(config)
+                asyncio.create_task(server.serve())
+                LogItOut(message_=f"Exporter is running on {ServiceData.metrics_ipv4}:{ServiceData.metrics_port}",
+                         for_tg=False)
             except Exception as e:
-                LogItOut(message_=f"Exporter running exception: {e.__str__()}", for_tg=False)
+                LogItOut(message_=f"Exporter running exception: {e}", for_tg=False)
 
         while (True):
             await sleep(10)
@@ -148,6 +149,10 @@ async def main():
 
 
 if __name__ == '__main__':
+
+    if not load_configuration(env_path):
+        work_error(message_="Configuration uploading error. Check logs.")
+
     try:
         asyncio.run(main())
     except Exception as e:
