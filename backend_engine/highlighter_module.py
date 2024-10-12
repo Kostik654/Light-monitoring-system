@@ -14,9 +14,9 @@ from job_module import Job
 from job_manager_abc import JobManagerAbs
 
 
-async def highlighter(job_mgr: JobManagerAbs):
+async def highlighter(job_mgr: JobManagerAbs, start_t: str):
 
-    start_time: str = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+    start_time: str = start_t
     prb_count: int = 0
 
     while True:

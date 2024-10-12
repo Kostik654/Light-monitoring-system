@@ -10,10 +10,10 @@ from job_manager import JobManager
 from ms_configs import TgBotPosterData, ServiceData
 from export_app import app
 
-
 urls_path = '/etc/monsys/jobs_list'
 env_path = '/etc/monsys/.env'
 wrong_chars = [' ', '#', '!']
+
 
 def signal_handler(sig: int):
     LogItOut(message_=f'🔴 Emergency shutdown of the monitoring system with SIG: {signal.Signals(sig).name} [{sig}]\n',
@@ -21,11 +21,13 @@ def signal_handler(sig: int):
              add_timestamp=True)
     sys.exit(0)
 
+
 def work_error(message_: str):
     LogItOut(message_=f'⭕️ Forced shutdown of the monitoring system with message: {message_}\n',
              for_tg=True,
              add_timestamp=True)
     sys.exit(0)
+
 
 def enable_signals(loop: AbstractEventLoop):
     loop.add_signal_handler(signal.SIGINT, signal_handler, signal.SIGINT)
@@ -35,7 +37,6 @@ def enable_signals(loop: AbstractEventLoop):
 
 
 def load_configuration(file_path: str = ".env") -> bool:
-
     LogItOut(message_=f'Uploading configuration...',
              for_tg=False,
              add_timestamp=False)
@@ -72,7 +73,6 @@ def load_configuration(file_path: str = ".env") -> bool:
 
 
 def get_urls(file_path: str = "urls.txt"):
-
     LogItOut(message_=f'Uploading monitoring modules...',
              for_tg=False,
              add_timestamp=False)
@@ -92,7 +92,6 @@ def get_urls(file_path: str = "urls.txt"):
 
 
 async def main():
-
     loop = asyncio.get_event_loop()
     enable_signals(loop)
 
@@ -121,7 +120,8 @@ async def main():
     if len(manager.get_socket_jobs()) > 0:
         modules_ += f"SOCKET module loaded: {len(manager.get_socket_jobs())}\n"
 
-    sum_ = len(manager.get_url_jobs()) + len(manager.get_sip_jobs()) + len(manager.get_backbone_jobs()) + len(manager.get_mongo_jobs()) + len(manager.get_socket_jobs())
+    sum_ = len(manager.get_url_jobs()) + len(manager.get_sip_jobs()) + len(manager.get_backbone_jobs()) + len(
+        manager.get_mongo_jobs()) + len(manager.get_socket_jobs())
 
     if sum_ > 0:
 
