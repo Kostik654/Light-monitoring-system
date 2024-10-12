@@ -52,7 +52,7 @@ class UrlJob(Job):
 
         try:
 
-            response = requests.get(self.url, timeout=self.await_time, verify=self.ssl_verification)
+            response = requests.get(self.url, timeout=(self.await_time, self.await_time), verify=self.ssl_verification)
 
             self.update_resp_time()
 
@@ -112,7 +112,7 @@ class UrlJob(Job):
 
         try:
 
-            response = requests.get(self.url, timeout=self.await_time, verify=self.ssl_verification)
+            response = requests.get(self.url, timeout=(self.await_time, self.await_time), verify=self.ssl_verification)
 
             self.response_time = time.perf_counter() - self.last_request_time
             self.response_time = toFixed(self.response_time, 4)

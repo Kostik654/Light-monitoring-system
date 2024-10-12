@@ -25,6 +25,7 @@ async def metrics():
     # TYPE actual_problems counter
     actual_problems {metrics_data['actual_problems']}
     # HELP uptime Service uptime in seconds
+    # TYPE uptime_sec counter
     uptime_sec {metrics_data['uptime_sec']}
     """
     return prometheus_data, 200, {'Content-Type': 'text/plain; version=0.0.4'}
@@ -32,9 +33,9 @@ async def metrics():
 
 async def DataCollector(job_mgr: JobManagerAbs, start_t: time.time):
 
-    # update each 5 seconds
+    # update each 3 seconds
     while (True):
         metrics_data['occurred_problems_total'] = get_occurred_problems_count()
         metrics_data['actual_problems'] = get_problems_count(job_mgr)
         metrics_data['uptime_sec'] = "%s" % (time.time() - start_t)
-        await sleep(5)
+        await sleep(3)
