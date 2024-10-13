@@ -105,7 +105,7 @@ class UrlJob(Job):
         finally:
             return message_, is_passed, err_type
 
-    def send_url(self) -> (str, bool, int):
+    async def send_url(self) -> (str, bool, int):
 
         self.last_request_time = time.perf_counter()
         message_: str = '[empty message]'
