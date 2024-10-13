@@ -1,4 +1,6 @@
 import asyncio
+import time
+from datetime import datetime
 
 from logger import LogItOut
 
@@ -8,11 +10,12 @@ from mongo_module import MongoJob
 from socket_module import SocketJob
 from highlighter_module import highlighter
 
-from ms_configs import TgBotPosterData
+from ms_configs import ServiceData, TgBotPosterData
 from common_methods import GetExpectedCodes
 
 from job_manager_abc import JobManagerAbs
 
+from export_app import DataCollector
 
 
 class JobManager(JobManagerAbs):
@@ -25,7 +28,7 @@ class JobManager(JobManagerAbs):
         self.__mongo_jobs: list[MongoJob] = []
         self.__socket_jobs: list[SocketJob] = []
 
-        #defaults in secs
+        # defaults in secs
         self.sip_timeout_default = 15
         self.curl_timeout_default = 5
         self.mongo_timeout_default = 5
@@ -35,7 +38,6 @@ class JobManager(JobManagerAbs):
         self.curl_interval_default = 60
         self.mongo_interval_default = 60
         self.socket_interval_default = 60
-
 
     def get_url_jobs(self) -> list[UrlJob]:
         return self.__url_jobs
@@ -54,7 +56,7 @@ class JobManager(JobManagerAbs):
 
     def add_url_job(self, job_splitted: list[str]):
 
-        #expected_ans: str = job_splitted[4]
+        # expected_ans: str = job_splitted[4]
         # codes or *
         expected_cds: list[int] = GetExpectedCodes(job_splitted[4])
 
@@ -80,7 +82,6 @@ class JobManager(JobManagerAbs):
             self.__url_jobs.append(job)
         if job_splitted[0].__eq__('[backbones_module]'):
             self.__backbone_jobs.append(job)
-
 
     def add_burl_job(self, job_splitted: list[str]):
 
@@ -108,7 +109,6 @@ class JobManager(JobManagerAbs):
 
         self.__backbone_jobs.append(job)
 
-
     def add_sip_job(self, job_splitted: list[str]):
 
         # codes of *
@@ -123,15 +123,15 @@ class JobManager(JobManagerAbs):
         else:
             interval = self.sip_interval_default
         job = SipJob(
-                     stype_=job_splitted[0],
-                     ipv4_address_=job_splitted[1],
-                     port_=int(job_splitted[2]),
-                     sname_=job_splitted[3],
-                     exp_codes=expected_cds,
-                     awtime=timeout,
-                     interval_t=interval,
-                     default_chat_id_=int(job_splitted[7]),
-                     tg_tag_=job_splitted[8])
+            stype_=job_splitted[0],
+            ipv4_address_=job_splitted[1],
+            port_=int(job_splitted[2]),
+            sname_=job_splitted[3],
+            exp_codes=expected_cds,
+            awtime=timeout,
+            interval_t=interval,
+            default_chat_id_=int(job_splitted[7]),
+            tg_tag_=job_splitted[8])
 
         self.__sip_jobs.append(job)
 
@@ -145,18 +145,17 @@ class JobManager(JobManagerAbs):
         else:
             interval = self.mongo_interval_default
         job = MongoJob(
-                     stype_=job_splitted[0],
-                     ipv4_address_=job_splitted[1],
-                     port_=int(job_splitted[2]),
-                     mrole=job_splitted[3],
-                     sname_=job_splitted[4],
-                     awtime=timeout,
-                     interval_t=interval,
-                     default_chat_id_=int(job_splitted[7]),
-                     tg_tag_=job_splitted[8])
+            stype_=job_splitted[0],
+            ipv4_address_=job_splitted[1],
+            port_=int(job_splitted[2]),
+            mrole=job_splitted[3],
+            sname_=job_splitted[4],
+            awtime=timeout,
+            interval_t=interval,
+            default_chat_id_=int(job_splitted[7]),
+            tg_tag_=job_splitted[8])
 
         self.__mongo_jobs.append(job)
-
 
     def add_socket_job(self, job_splitted: list[str]):
         if job_splitted[4] != '*':
@@ -168,17 +167,16 @@ class JobManager(JobManagerAbs):
         else:
             interval = self.socket_interval_default
         job = SocketJob(
-                     stype_=job_splitted[0],
-                     ipv4_address_=job_splitted[1],
-                     ports_names=job_splitted[2],
-                     sname_=job_splitted[3],
-                     awtime=timeout,
-                     interval_t=interval,
-                     default_chat_id_=int(job_splitted[6]),
-                     tg_tag_=job_splitted[7])
+            stype_=job_splitted[0],
+            ipv4_address_=job_splitted[1],
+            ports_names=job_splitted[2],
+            sname_=job_splitted[3],
+            awtime=timeout,
+            interval_t=interval,
+            default_chat_id_=int(job_splitted[6]),
+            tg_tag_=job_splitted[7])
 
         self.__socket_jobs.append(job)
-
 
     def add_job(self, job):
 
@@ -206,7 +204,7 @@ class JobManager(JobManagerAbs):
                          for_tg=False,
                          add_timestamp=False)
 
-        #elif job_splitted[0].__eq__('[backbones_module]'):
+        # elif job_splitted[0].__eq__('[backbones_module]'):
         #    return
         elif job_splitted[0].__eq__('[sip_module]'):
             try:
@@ -268,5 +266,12 @@ class JobManager(JobManagerAbs):
                      for_tg=False,
                      add_timestamp=True)
 
+        # TG highligher
         if TgBotPosterData.is_highlighter_enabled:
-            asyncio.create_task(highlighter(self))
+            asyncio.create_task(highlighter(job_mgr=self,
+                                            start_t=datetime.now().strftime("%Y-%m-%d-%H:%M:%S")))
+        # Prometheus exporter
+        if ServiceData.is_export_enabled:
+            asyncio.create_task(DataCollector(job_mgr=self,
+                                              start_t=time.time()))
+

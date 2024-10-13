@@ -1,6 +1,7 @@
+import asyncio
 import time
 
-import requests
+import aiohttp
 
 from ms_configs import TgBotPosterData
 
@@ -9,7 +10,7 @@ def GetTgBotUrl() -> str:
     return f"https://api.telegram.org/bot{TgBotPosterData.telegram_bot_token}/sendMessage"
 
 
-def send_telegram_message(message: str, chat_lvl: int = 0) -> bool:
+async def send_telegram_message(message: str, chat_lvl: int = 0) -> bool:
 
     is_success: bool = False
 
@@ -28,18 +29,19 @@ def send_telegram_message(message: str, chat_lvl: int = 0) -> bool:
         if not TgBotPosterData.is_queue:
             try:
                 TgBotPosterData.is_queue = True
-                response = requests.post(GetTgBotUrl(), data=payload)
-                if response.status_code != 200:
-                    print(f"Sending error to Telegram: {response.status_code}, {response.text}")
-                else:
-                    is_success = True
-            except requests.exceptions.RequestException as e:
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(GetTgBotUrl(), data=payload) as response:
+                        if response.status != 200:
+                            print(f"Sending error to Telegram: {response.status}, {await response.text()}")
+                        else:
+                            is_success = True
+            except aiohttp.ClientError as e:
                 print(f"Request error to Telegram API: {e}")
             finally:
-                time.sleep(1)
+                await asyncio.sleep(1)
                 TgBotPosterData.is_queue = False
                 break
         else:
-            time.sleep(TgBotPosterData.pause_time)
+            await asyncio.sleep(TgBotPosterData.pause_time)
 
     return is_success

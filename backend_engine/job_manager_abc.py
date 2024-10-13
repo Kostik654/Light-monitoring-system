@@ -5,6 +5,7 @@ from sip_module import SipJob
 from mongo_module import MongoJob
 from socket_module import SocketJob
 
+
 class JobManagerAbs(ABC):
 
     @abstractmethod

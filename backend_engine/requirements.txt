@@ -1,5 +1,5 @@
-requests==2.31.0
-pymongo==4.5.0
+pymongo==4.10.1
 psutil==6.0.0
-flask==3.0.3
+quart==0.19.6
 uvicorn==0.31.1
+aiohttp==3.10.10
