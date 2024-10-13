@@ -3,3 +3,4 @@ pymongo==4.10.1
 psutil==6.0.0
 quart==0.19.6
 uvicorn==0.31.1
+aiohttp==3.10.10
