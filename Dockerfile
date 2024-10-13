@@ -14,6 +14,8 @@ WORKDIR $pname
 
 COPY ./backend_engine/* ./
 
+EXPOSE 65400
+
 RUN apt-get update
 
 RUN apt-get install -y iputils-ping net-tools

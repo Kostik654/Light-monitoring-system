@@ -10,7 +10,6 @@ from port_item import PortItem
 
 class SocketJob(Job):
 
-
     def __init__(self,
                  ipv4_address_: str,
                  ports_names: str,
@@ -38,7 +37,6 @@ class SocketJob(Job):
                  for_tg=False,
                  add_timestamp=False)
 
-
     def check_host_availability(self, host: str, attempts: int = 5) -> (str, bool):
 
         success: bool = False
@@ -63,12 +61,11 @@ class SocketJob(Job):
 
         return mess, success
 
-
     def check_port(self, port_: PortItem) -> (str, bool, int):
 
         message_: str = ""
         is_passed: bool = False
-        error_type: int = 0 # no error
+        error_type: int = 0  # no error
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(self.await_time)
@@ -108,7 +105,6 @@ class SocketJob(Job):
             sock.close()
             return message_, is_passed, error_type
 
-
     def start_testing(self) -> (str, bool):
 
         message_: str = f"Host {self.remote_ipv4_address} ports revision [{self.job_name}]\n"
@@ -118,13 +114,13 @@ class SocketJob(Job):
         # check Host Ports
         if self.remote_ports is not None:
             for port_ in self.remote_ports:
-                #print(f'Port {port_} revision started')
+                # print(f'Port {port_} revision started')
                 mess, is_psd, err_t = self.check_port(port_)
                 message_ += f"{mess}\n"
                 if not is_psd:
                     errors += 1
         else:
-        # check only Host (icmp)
+            # check only Host (icmp)
             mess, is_psd = self.check_host_availability(self.remote_ipv4_address)
             message_ = (f"Host {self.remote_ipv4_address} [{self.job_name}] revision\n"
                         f"{mess}")
@@ -135,7 +131,6 @@ class SocketJob(Job):
             is_passed = True
 
         return message_, is_passed
-
 
     async def start_job(self):
 
@@ -159,7 +154,7 @@ class SocketJob(Job):
 
                 self.problems_counter()  # self.last_failed = True
 
-                if not self.tg_tag.equals("*"):
+                if not self.tg_tag.__eq__("*"):
                     message_ += f"\n{self.tg_tag}"
 
                 LogItOut(message_=message_,
