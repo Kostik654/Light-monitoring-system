@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 
 from tgbot_post import send_telegram_message
@@ -16,7 +17,7 @@ def LogItOut(message_: str,
         return
 
     if TgBotPosterData.is_tg_enabled and (for_tg or just_for_tg):
-        send_telegram_message(message=message_, chat_lvl=chat_lvl_)
+        asyncio.create_task(send_telegram_message(message=message_, chat_lvl=chat_lvl_))
 
     if not just_for_tg:
         message_ = message_.replace('\n', '\t')
