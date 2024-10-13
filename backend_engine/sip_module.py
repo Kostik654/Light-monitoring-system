@@ -32,7 +32,7 @@ class SipJob(Job):
 
     def get_status_code(self, resp_str: str) -> int:
         first_line: str = resp_str.split("\r\n")[0]
-        code:int = int(first_line.split(" ")[1])
+        code: int = int(first_line.split(" ")[1])
         return code
 
     def send_sip_options(self,
@@ -110,13 +110,13 @@ class SipJob(Job):
 
             from_cont_server = "XXX"
             is_success, mess, curr_err_t = self.send_sip_options(from_contact_sip_server=from_cont_server,
-                                                     to_server=self.remote_ipv4_address,
-                                                     sip_port=self.remote_port)
+                                                                 to_server=self.remote_ipv4_address,
+                                                                 sip_port=self.remote_port)
 
             self.problems_counter(is_success)
 
-            if not self.tg_tag.equals("*") and not is_success:
-                message_ += f"\n{self.tg_tag}"
+            if not self.tg_tag.__eq__("*") and not is_success:
+                mess += f"\n{self.tg_tag}"
 
             LogItOut(message_=mess,
                      for_tg=self.is_for_tg(curr_err_t),

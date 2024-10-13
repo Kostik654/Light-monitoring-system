@@ -131,7 +131,7 @@ class MongoJob(Job):
 
                 self.problems_counter() #  self.last_failed = True
 
-                if not self.tg_tag.equals("*"):
+                if not self.tg_tag.__eq__("*"):
                     message_ += f"\n{self.tg_tag}"
 
                 LogItOut(message_=message_,
