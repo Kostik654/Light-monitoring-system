@@ -1,16 +1,14 @@
-# Lite monitoring system
+# Lite Monitoring System
 
-## Легковесная система мониторинга
+A lightweight monitoring system for checking the availability of hosts, services, and websites, designed for quick deployment and setup with a focus on Telegram notifications.
 
-Легковесная система мониторинга доступности хостов, служб, сайтов для быстрого разворачивания и настройки с ориентацией на Telegram-уведомления.
+This system consists of a service developed in Python 3.9.
 
-Данная система представляет из себя службу, разработанную на языке Python 3.9
+The service includes the following monitoring modules:
+- **URL Module**: Checks the availability of resources via HTTP/S protocol.
+- **BURL Module**: Essentially an analogue of the URL module, but with the ability to check the received content.
+- **SIP Module**: Checks the availability of the Asterisk telephony server by sending an OPTIONS request.
+- **MONGO Module**: Checks the availability of the primary Mongo database, as well as tests for searching, writing, and deleting collections.
+- **SOCKET Module**: Checks the availability of network services on the host or the host itself.
 
-Служба включает в себя следующие модули мониторинга:
-- URL-модуль для проверки доступности ресурсов по протоколу HTTP/S
-- BURL-модуль, по сути аналог URL, но с возможностью проверки полученного контента
-- SIP-модуль для проверки доступности сервера телефонии Asterisk методом отправки запроса OPTIONS
-- MONGO-модуль для проверки доступности Primary базы данных Mongo, а также тесты поиска, записи и удаления коллекции
-- SOCKET-модуль для проверки доступности сетевых служб хоста, либо самого хоста
-
-Службу можно развернуть на хостах разных подсетей для мониторинга целевого объекта из разных точек локальной сети.
+The service can be deployed on hosts in different subnets to monitor the target object from various points within the local network.
