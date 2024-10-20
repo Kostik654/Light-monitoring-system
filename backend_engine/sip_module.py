@@ -81,23 +81,27 @@ class SipJob(Job):
             if self.last_status_code in self.expected_codes:
                 is_success = True
                 out_message = f"✅ OK\tSIP\t{self.response_time}s\t{serv_inf}\t\t\t\tCODE: {self.last_status_code}\t[{self.job_name}]"
+                self.update_status_log(status_ind=0, message_inf=out_message[2:])
                 current_error_type = -1
             else:
                 is_success = False
                 out_message = (f"❌ PROBLEM: {serv_inf}\t[{self.job_name}]\n"
                                f"Code [{self.last_status_code}] is not in expected codes: {self.expected_codes}\n"
                                f"Server response:\n{response}\n")
+                self.update_status_log(status_ind=1, message_inf=out_message[2:])
                 current_error_type = 0
         except socket.timeout:
             self.update_resp_time()
             is_success = False
             out_message = f"❌ TIMEOUT error (> {self.await_time} sec): {serv_inf}\t[{self.job_name}]"
+            self.update_status_log(status_ind=1, message_inf=out_message[2:])
             current_error_type = 1
         except Exception as e:
             self.update_resp_time()
             is_success = False
             current_error_type = 2
             out_message = f"❌ SIP checking error occurred in job [{self.job_name}]: {e}"
+            self.update_status_log(status_ind=1, message_inf=out_message[2:])
         finally:
             sock.close()
             return is_success, out_message, current_error_type

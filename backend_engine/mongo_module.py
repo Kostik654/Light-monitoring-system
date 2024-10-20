@@ -73,17 +73,21 @@ class MongoJob(Job):
 
             response_time = toFixed(time.time() - last_request_time, 4)
             message_ = f"✅ OK: [{test_name}] test: {response_time}sec (max {self.await_time}sec)"
+            self.update_status_log(status_ind=0, message_inf=message_[2:])
         except PyMongoError as exc:
             response_time = toFixed(time.time() - last_request_time, 4)
             if exc.timeout:
                 message_ = f"❌ Timeout test [{test_name}] is failed: {response_time}sec (max {self.await_time}sec)"
+                self.update_status_log(status_ind=1, message_inf=message_[2:])
                 err_type = 0
             else:
                 message_ = f"❌ Failed with non-timeout error [{test_name}]: {exc!r}"
+                self.update_status_log(status_ind=1, message_inf=message_[2:])
                 err_type = 1
         except Exception as e:
             response_time = toFixed(time.time() - last_request_time, 4)
             message_ = f"❌ PROBLEM: [{self.job_name}] testing error: {e.args[0]}: {e.args[1]}"
+            self.update_status_log(status_ind=1, message_inf=message_[2:])
             err_type = 2
         finally:
             client.close()
