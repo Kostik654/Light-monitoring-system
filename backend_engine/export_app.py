@@ -4,11 +4,9 @@ from asyncio import sleep
 from quart import Quart
 
 from problems_statistics import *
-from job_manager_abc import JobManagerAbs
-from job_module import Job
+from jobs_list import JobsList
 
 app = Quart(__name__)
-all_jobs: list[Job] = []
 
 metrics_data = {
     'occurred_problems_total': 0,
@@ -19,10 +17,24 @@ metrics_data = {
 
 @app.route('/jobs_status')
 async def get_jobs_status():
-    url_logs: str = '\n'.join(
-        job.last_log.get_structured_message() for job in all_jobs if job.job_type == "[common_urls_module]")
-    items = f"""
+
+    url_logs: str = '\n'.join(job.last_log.get_structured_message() for job in JobsList.url_jobs)
+    burl_logs: str = '\n'.join(job.last_log.get_structured_message() for job in JobsList.backbone_jobs)
+    sip_logs: str = '\n'.join(job.last_log.get_structured_message() for job in JobsList.sip_jobs)
+    mongo_logs: str = '\n'.join(job.last_log.get_structured_message() for job in JobsList.mongo_jobs)
+    socket_logs: str = '\n'.join(job.last_log.get_structured_message() for job in JobsList.socket_jobs)
+
+    items: str = f"""
+    [URL] jobs:\n
     {url_logs}\n
+    [B-URL] jobs:\n
+    {burl_logs}\n
+    [SIP] jobs:\n
+    {sip_logs}\n
+    [MONGO] jobs:\n
+    {mongo_logs}\n
+    [SOCKET] jobs:\n
+    {socket_logs}\n
     """
     return items, 200, {'Content-Type': 'text/plain; version=0.0.4'}
 
@@ -43,10 +55,10 @@ async def metrics():
     return prometheus_data, 200, {'Content-Type': 'text/plain; version=0.0.4'}
 
 
-async def DataCollector(job_mgr: JobManagerAbs, start_t: time.time):
+async def DataCollector(start_t: time.time):
     # update each 3 seconds
     while (True):
         metrics_data['occurred_problems_total'] = get_occurred_problems_count()
-        metrics_data['actual_problems'] = get_problems_count(job_mgr)
+        metrics_data['actual_problems'] = get_problems_count()
         metrics_data['uptime_sec'] = "%s" % (time.time() - start_t)
         await sleep(3)

@@ -13,12 +13,13 @@ from highlighter_module import highlighter
 from ms_configs import ServiceData, TgBotPosterData
 from common_methods import GetExpectedCodes
 
-from job_manager_abc import JobManagerAbs
+from job_manager_abc import JobManagerDefaults
 
-from export_app import DataCollector, all_jobs
+from export_app import DataCollector
+from jobs_list import JobsList
 
 
-class JobManager(JobManagerAbs):
+class JobManager(JobManagerDefaults):
 
     def __init__(self):
 
@@ -48,7 +49,7 @@ class JobManager(JobManagerAbs):
                      default_chat_id_=int(job_splitted[7]),
                      tg_tag_=job_splitted[8])
 
-        self.url_jobs.append(job)
+        JobsList.url_jobs.append(job)
 
     def add_burl_job(self, job_splitted: list[str]):
 
@@ -74,7 +75,7 @@ class JobManager(JobManagerAbs):
                      default_chat_id_=int(job_splitted[8]),
                      tg_tag_=job_splitted[9])
 
-        self.backbone_jobs.append(job)
+        JobsList.backbone_jobs.append(job)
 
     def add_sip_job(self, job_splitted: list[str]):
 
@@ -100,7 +101,7 @@ class JobManager(JobManagerAbs):
             default_chat_id_=int(job_splitted[7]),
             tg_tag_=job_splitted[8])
 
-        self.sip_jobs.append(job)
+        JobsList.sip_jobs.append(job)
 
     def add_mongo_job(self, job_splitted: list[str]):
         if job_splitted[5] != '*':
@@ -122,7 +123,7 @@ class JobManager(JobManagerAbs):
             default_chat_id_=int(job_splitted[7]),
             tg_tag_=job_splitted[8])
 
-        self.mongo_jobs.append(job)
+        JobsList.mongo_jobs.append(job)
 
     def add_socket_job(self, job_splitted: list[str]):
         if job_splitted[4] != '*':
@@ -143,7 +144,7 @@ class JobManager(JobManagerAbs):
             default_chat_id_=int(job_splitted[6]),
             tg_tag_=job_splitted[7])
 
-        self.socket_jobs.append(job)
+        JobsList.socket_jobs.append(job)
 
     def add_job(self, job):
 
@@ -207,32 +208,27 @@ class JobManager(JobManagerAbs):
             return
 
     def start_jobs(self):
-        for ujob in self.url_jobs:
-            all_jobs.append(ujob)
+        for ujob in JobsList.url_jobs:
             asyncio.create_task(ujob.start_job())
             LogItOut(message_=f'URL job started: {ujob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for sjob in self.sip_jobs:
-            all_jobs.append(sjob)
+        for sjob in JobsList.sip_jobs:
             asyncio.create_task(sjob.start_job())
             LogItOut(message_=f'SIP job started: {sjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for bjob in self.backbone_jobs:
-            all_jobs.append(bjob)
+        for bjob in JobsList.backbone_jobs:
             asyncio.create_task(bjob.start_job())
             LogItOut(message_=f'B-URL job started: {bjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for mjob in self.mongo_jobs:
-            all_jobs.append(mjob)
+        for mjob in JobsList.mongo_jobs:
             asyncio.create_task(mjob.start_job())
             LogItOut(message_=f'MONGO job started: {mjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for sktjob in self.socket_jobs:
-            all_jobs.append(sktjob)
+        for sktjob in JobsList.socket_jobs:
             asyncio.create_task(sktjob.start_job())
             LogItOut(message_=f'SOCKET job started: {sktjob.job_name}',
                      for_tg=False,
@@ -240,10 +236,8 @@ class JobManager(JobManagerAbs):
 
         # TG highligher
         if TgBotPosterData.is_highlighter_enabled:
-            asyncio.create_task(highlighter(job_mgr=self,
-                                            start_t=datetime.now().strftime("%Y-%m-%d-%H:%M:%S")))
+            asyncio.create_task(highlighter(start_t=datetime.now().strftime("%Y-%m-%d-%H:%M:%S")))
         # Prometheus exporter
         if ServiceData.is_export_enabled:
-            asyncio.create_task(DataCollector(job_mgr=self,
-                                              start_t=time.time()))
+            asyncio.create_task(DataCollector(start_t=time.time()))
 

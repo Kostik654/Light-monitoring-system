@@ -1,20 +1,8 @@
-from abc import ABC
-
-from url_module import UrlJob
-from sip_module import SipJob
-from mongo_module import MongoJob
-from socket_module import SocketJob
 
 
-class JobManagerAbs(ABC):
+class JobManagerDefaults:
 
     def __init__(self):
-
-        self.url_jobs: list[UrlJob] = []
-        self.backbone_jobs: list[UrlJob] = []
-        self.sip_jobs: list[SipJob] = []
-        self.mongo_jobs: list[MongoJob] = []
-        self.socket_jobs: list[SocketJob] = []
 
         # defaults in secs
         self.sip_timeout_default = 15
@@ -26,18 +14,3 @@ class JobManagerAbs(ABC):
         self.curl_interval_default = 60
         self.mongo_interval_default = 60
         self.socket_interval_default = 60
-
-    def get_url_jobs(self) -> list[UrlJob]:
-        return self.url_jobs
-
-    def get_backbone_jobs(self) -> list[UrlJob]:
-        return self.backbone_jobs
-
-    def get_sip_jobs(self) -> list[SipJob]:
-        return self.sip_jobs
-
-    def get_mongo_jobs(self) -> list[MongoJob]:
-        return self.mongo_jobs
-
-    def get_socket_jobs(self) -> list[SocketJob]:
-        return self.socket_jobs
