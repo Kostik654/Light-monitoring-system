@@ -20,8 +20,8 @@ class log_item:
         self.job: JobBase = job_
         self.info_message = message_info
 
-    def get_status_ico(self, ico_type: int = 0) -> str:
-        if ico_type == 0:
+    def get_status_ico(self, universal_ico_type: bool = True) -> str:
+        if universal_ico_type:
             return log_item.statuses_universal[self.status_index]
         else:
             return log_item.statuses[self.status_index]
