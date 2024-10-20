@@ -71,6 +71,7 @@ class UrlJob(Job):
                     if self.expected_codes is not None and self.last_status_code not in self.expected_codes and self.last_status_code != 200:
                         err_type = 0
                         message_ = f"❌ PROBLEM\t[{self.job_name}]\t({self.response_time} sec)\t\tURL: {self.url}\nIS NOT IN EXPECTED CODES: {self.last_status_code}\nExpected: {self.expected_codes}"
+                        self.update_status_log(status_ind=1, message_inf=message_[3:])
 
                     elif self.last_status_code == 200:
                         resp = await response.text()
@@ -78,14 +79,17 @@ class UrlJob(Job):
                             err_type = -1  # no error
                             is_passed = True
                             message_ = f"✅ OK\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\tCODE: {self.last_status_code}\nRESP: {resp}"
+                            self.update_status_log(status_ind=0, message_inf=message_[3:])
 
                         else:
                             err_type = 1  # bad response
                             message_ = f"⚠️ WARNING\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\nCODE: {self.last_status_code}\nBAD RESP: {resp}"
+                            self.update_status_log(status_ind=2, message_inf=message_[3:])
 
                     else:
                         err_type = 2
                         message_ = f"⚠️ ATTENTION\t[{self.job_name}]\t({self.response_time} sec)\tURL: {self.url}\tCODE: {self.last_status_code}"
+                        self.update_status_log(status_ind=2, message_inf=message_[3:])
 
         except asyncio.TimeoutError as e:
             # resp_time = self.response_time
@@ -93,6 +97,7 @@ class UrlJob(Job):
             self.last_status_code = None
             err_type = 3
             message_ = f"❌ TIMEOUT\t[{self.job_name}]\t(> {self.await_time} sec)\tURL: {self.url}\n{e}"
+            self.update_status_log(status_ind=1, message_inf=message_[3:])
 
         except aiohttp.ClientSSLError as e:
             self.update_resp_time()
@@ -101,6 +106,7 @@ class UrlJob(Job):
             self.last_status_code = None
             err_type = 4
             message_ = f"❌ SSL Error\t[{self.job_name}]\t({resp_time} sec)\tURL: {self.url}\n{e}"
+            self.update_status_log(status_ind=1, message_inf=message_[3:])
 
         except Exception as e:
             self.update_resp_time()
@@ -109,6 +115,7 @@ class UrlJob(Job):
             self.last_status_code = None
             err_type = 5
             message_ = f"❌ REQUEST ERROR\t[{self.job_name}] ({resp_time} sec)\tURL\n: {self.url}: {e}"
+            self.update_status_log(status_ind=1, message_inf=message_[3:])
 
         finally:
             return message_, is_passed, err_type
@@ -140,25 +147,30 @@ class UrlJob(Job):
                     if self.expected_codes is not None and self.last_status_code not in self.expected_codes and self.last_status_code not in UrlJob.weird_codes:
                         err_type = 0
                         message_ = f"❌ PROBLEM\t[{self.job_name}] ({self.response_time} sec)\tURL: {self.url}\nIS NOT IN EXPECTED CODES: {self.last_status_code}\nExpected: {self.expected_codes}"
+                        self.update_status_log(status_ind=1, message_inf=message_[3:])
 
                     elif self.last_status_code in UrlJob.weird_codes:
                         err_type = 1
                         message_ = f"⚠️ ATTENTION\t[{self.job_name}]\t({self.response_time} sec)\tURL: {self.url}\tWARNING CODE: {self.last_status_code}"
+                        self.update_status_log(status_ind=2, message_inf=message_[3:])
 
                     elif self.last_status_code in UrlJob.ok_codes or (
                             self.expected_codes is not None and self.last_status_code in self.expected_codes):
                         err_type = -1  # no error
                         is_passed = True
                         message_ = f"✅ OK\t[{self.job_name}]\t{self.response_time}s\tURL: {self.url}\tCODE: {self.last_status_code}"
+                        self.update_status_log(status_ind=0, message_inf=message_[3:])
                     else:
                         err_type = 2
                         message_ = f"⚠️ ATTENTION\t[{self.job_name}]\t({self.response_time} sec)\tURL: {self.url}\tCODE: {self.last_status_code}"
+                        self.update_status_log(status_ind=2, message_inf=message_[3:])
 
         except asyncio.TimeoutError as e:
             self.response_time = None
             self.last_status_code = None
             err_type = 3
             message_ = f"❌ TIMEOUT\t[{self.job_name}]\t(> {self.await_time} sec)\tURL: {self.url}\n{e}"
+            self.update_status_log(status_ind=1, message_inf=message_[3:])
 
         except aiohttp.ClientSSLError as e:
             self.update_resp_time()
@@ -167,6 +179,7 @@ class UrlJob(Job):
             self.last_status_code = None
             err_type = 4
             message_ = f"❌ SSL Error\t[{self.job_name}]\t(Response time {resp_time} sec)\tURL: {self.url}\n{e}"
+            self.update_status_log(status_ind=1, message_inf=message_[3:])
 
         except Exception as e:
             self.update_resp_time()
@@ -175,6 +188,7 @@ class UrlJob(Job):
             self.last_status_code = None
             err_type = 5
             message_ = f"❌ REQUEST ERROR\t[{self.job_name}]\t({resp_time} sec)\tURL\n: {self.url}: {e}"
+            self.update_status_log(status_ind=1, message_inf=message_[3:])
 
         finally:
             return message_, is_passed, err_type

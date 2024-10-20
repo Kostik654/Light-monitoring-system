@@ -15,29 +15,14 @@ from common_methods import GetExpectedCodes
 
 from job_manager_abc import JobManagerAbs
 
-from export_app import DataCollector
+from export_app import DataCollector, all_jobs
 
 
 class JobManager(JobManagerAbs):
 
-    def __init__(self, mx_workers: int = 0, job_prfx: str = 'sm_job-'):
+    def __init__(self):
 
-        self.__url_jobs: list[UrlJob] = []
-        self.__backbone_jobs: list[UrlJob] = []
-        self.__sip_jobs: list[SipJob] = []
-        self.__mongo_jobs: list[MongoJob] = []
-        self.__socket_jobs: list[SocketJob] = []
-
-        # defaults in secs
-        self.sip_timeout_default = 15
-        self.curl_timeout_default = 5
-        self.mongo_timeout_default = 5
-        self.socket_timeout_default = 5
-
-        self.sip_interval_default = 60
-        self.curl_interval_default = 60
-        self.mongo_interval_default = 60
-        self.socket_interval_default = 60
+        super().__init__()
 
     def get_url_jobs(self) -> list[UrlJob]:
         return self.__url_jobs
@@ -78,10 +63,7 @@ class JobManager(JobManagerAbs):
                      default_chat_id_=int(job_splitted[7]),
                      tg_tag_=job_splitted[8])
 
-        if job_splitted[0].__eq__('[common_urls_module]'):
-            self.__url_jobs.append(job)
-        if job_splitted[0].__eq__('[backbones_module]'):
-            self.__backbone_jobs.append(job)
+        self.__url_jobs.append(job)
 
     def add_burl_job(self, job_splitted: list[str]):
 
@@ -241,26 +223,31 @@ class JobManager(JobManagerAbs):
 
     def start_jobs(self):
         for ujob in self.__url_jobs:
+            all_jobs.append(ujob)
             asyncio.create_task(ujob.start_job())
             LogItOut(message_=f'URL job started: {ujob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
         for sjob in self.__sip_jobs:
+            all_jobs.append(sjob)
             asyncio.create_task(sjob.start_job())
             LogItOut(message_=f'SIP job started: {sjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
         for bjob in self.__backbone_jobs:
+            all_jobs.append(bjob)
             asyncio.create_task(bjob.start_job())
             LogItOut(message_=f'B-URL job started: {bjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
         for mjob in self.__mongo_jobs:
+            all_jobs.append(mjob)
             asyncio.create_task(mjob.start_job())
             LogItOut(message_=f'MONGO job started: {mjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
         for sktjob in self.__socket_jobs:
+            all_jobs.append(sktjob)
             asyncio.create_task(sktjob.start_job())
             LogItOut(message_=f'SOCKET job started: {sktjob.job_name}',
                      for_tg=False,

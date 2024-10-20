@@ -1,4 +1,4 @@
-from job_module import Job
+from job_module_abc import JobBase
 from job_manager_abc import JobManagerAbs
 
 
@@ -58,7 +58,7 @@ def get_mongo_problems_str(job_mgr: JobManagerAbs) -> str:
 
 
 def get_occurred_problems_count() -> int:
-    return Job.all_occured_problems
+    return JobBase.all_occured_problems
 
 
 def get_problems_count(job_mgr: JobManagerAbs) -> int:

@@ -5,14 +5,26 @@ from quart import Quart
 
 from problems_statistics import *
 from job_manager_abc import JobManagerAbs
+from job_module import Job
 
 app = Quart(__name__)
+all_jobs: list[Job] = []
 
 metrics_data = {
     'occurred_problems_total': 0,
     'actual_problems': 0,
     'uptime_sec': 0
 }
+
+
+@app.route('/jobs_status')
+async def get_jobs_status():
+    url_logs: str = '\n'.join(
+        job.last_log.get_structured_message() for job in all_jobs if job.job_type == "[common_urls_module]")
+    items = f"""
+    {url_logs}\n
+    """
+    return items, 200, {'Content-Type': 'text/plain; version=0.0.4'}
 
 
 @app.route('/monitoring')
@@ -32,7 +44,6 @@ async def metrics():
 
 
 async def DataCollector(job_mgr: JobManagerAbs, start_t: time.time):
-
     # update each 3 seconds
     while (True):
         metrics_data['occurred_problems_total'] = get_occurred_problems_count()
