@@ -77,30 +77,37 @@ class SocketJob(Job):
                 if result == 0:
                     is_passed = True
                     message_ += f"✅ Port {port_.Port} [{port_.ServiceName}]: OPENED"
+                    self.update_status_log(status_ind=0, message_inf=message_[2:])
                 else:
                     error_type = 1
                     message_ += f"⚠️ Port {port_.Port} [{port_.ServiceName}]: CLOSED [{result}: {Job.socket_error_descriptions[result]}]"
+                    self.update_status_log(status_ind=2, message_inf=message_[3:])
             else:
                 if result == 0:
                     if not (result in port_.ExceptedCodes):
                         is_passed = False
                         error_type = 2
                         message_ += f"⚠️ Port {port_.Port} [{port_.ServiceName}]: OPENED [NOT EXPECTED]"
+                        self.update_status_log(status_ind=2, message_inf=message_[3:])
                     else:
                         is_passed = True
                         message_ += f"✅ Port {port_.Port} [{port_.ServiceName}]: OPENED"
+                        self.update_status_log(status_ind=0, message_inf=message_[2:])
                 else:
                     if not (result in port_.ExceptedCodes):
                         is_passed = False
                         error_type = 3
                         message_ += f"❌ Port {port_.Port} [{port_.ServiceName}]: CLOSED [{result} - NOT EXPECTED]"
+                        self.update_status_log(status_ind=1, message_inf=message_[2:])
                     else:
                         is_passed = True
                         message_ += f"✅ Port {port_.Port} [{port_.ServiceName}]: CLOSED  [{result} - EXPECTED]"
+                        self.update_status_log(status_ind=0, message_inf=message_[2:])
 
         except Exception as e:
             error_type = 4
             message_ += f"❌ Port {port_.Port} [{port_.ServiceName}] revision ERROR: {e}"
+            self.update_status_log(status_ind=1, message_inf=message_[2:])
         finally:
             sock.close()
             return message_, is_passed, error_type

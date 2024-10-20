@@ -2,6 +2,8 @@ import signal
 import sys
 import asyncio
 import uvicorn
+import re
+import traceback
 from asyncio import sleep, AbstractEventLoop
 
 from common_methods import GetExpectedCodes
@@ -24,7 +26,7 @@ def signal_handler(sig: int):
 
 
 def work_error(message_: str):
-    LogItOut(message_=f'⭕️ Forced shutdown of the monitoring system with message: {message_}\n',
+    LogItOut(message_=f'⭕️ Forced shutdown of the monitoring system with message:\n{message_}\n',
              for_tg=True,
              add_timestamp=True)
     sys.exit(0)
@@ -38,6 +40,9 @@ def enable_signals(loop: AbstractEventLoop):
 
 
 def load_configuration(file_path: str = ".env") -> bool:
+
+    parameters_count: int = 9
+
     LogItOut(message_=f'Uploading configuration...',
              for_tg=False,
              add_timestamp=False)
@@ -45,6 +50,11 @@ def load_configuration(file_path: str = ".env") -> bool:
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             conf_strs = file.read().splitlines()
+
+        # Delete comments with regex
+        conf_strs = [item for item in conf_strs if not re.match(r'^\s*#', item)]
+        if len(conf_strs) != parameters_count:
+            raise Exception(f"Error: Not enough parameters ({len(conf_strs)}/{parameters_count}) in the config file!")
 
         TgBotPosterData.telegram_bot_token = conf_strs[0].split('=')[1]
         TgBotPosterData.chats_list = GetExpectedCodes(conf_strs[1].split('=')[1], ' ')
@@ -70,6 +80,7 @@ def load_configuration(file_path: str = ".env") -> bool:
         LogItOut(message_=f"Service configuration: Error reading file: {file_path}: {e}",
                  for_tg=False,
                  add_timestamp=False)
+        traceback.print_exc()
         return False
 
 
@@ -89,6 +100,7 @@ def get_urls(file_path: str = "urls.txt"):
         LogItOut(message_=f"Monitoring modules: Error reading file: {file_path}: {e}",
                  for_tg=False,
                  add_timestamp=False)
+        traceback.print_exc()
         return []
 
 
@@ -100,11 +112,11 @@ async def main():
              for_tg=False,
              add_timestamp=False)
 
-    for url_ in get_urls(urls_path):
-        if url_.__eq__(''):
-            continue
-        if url_[0] not in wrong_chars:
-            JobManager.add_job(url_)
+    wrong_chars_pattern = f"^[{''.join(re.escape(char) for char in wrong_chars)}]+"
+    urls_list: list[str] = [line for line in get_urls(urls_path) if not re.match(wrong_chars_pattern, line) and len(line) > 0]
+
+    for url_ in urls_list:
+        JobManager.add_job(url_)
 
     modules_: str = ""
 
@@ -139,6 +151,7 @@ async def main():
                          for_tg=False)
             except Exception as e:
                 LogItOut(message_=f"Exporter running exception: {e}", for_tg=False)
+                traceback.print_exc()
 
         while (True):
             await sleep(10)
@@ -155,4 +168,5 @@ if __name__ == '__main__':
     try:
         asyncio.run(main())
     except Exception as e:
+        traceback.print_exc()
         work_error(message_=e.__str__())
