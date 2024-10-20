@@ -3,10 +3,16 @@ from job_module_abc import JobBase
 
 class log_item:
 
-    statuses: dict[int,str] = {
+    statuses: dict[int, str] = {
         0: "✅",
         1: "❌",
         2: "⚠️"
+    }
+
+    statuses_universal: dict[int, str] = {
+        0: "[+]",
+        1: "[X]",
+        2: "[!]"
     }
 
     def __init__(self, status_: int = 1, job_: JobBase = None, message_info: str = "No messages"):
@@ -14,8 +20,11 @@ class log_item:
         self.job: JobBase = job_
         self.info_message = message_info
 
-    def get_status_ico(self) -> str:
-        return log_item.statuses[self.status_index]
+    def get_status_ico(self, ico_type: int = 0) -> str:
+        if ico_type == 0:
+            return log_item.statuses_universal[self.status_index]
+        else:
+            return log_item.statuses[self.status_index]
 
     def get_structured_message(self, splitter: chr = '\t') -> str or None:
 
