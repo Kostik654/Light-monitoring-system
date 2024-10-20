@@ -100,13 +100,11 @@ async def main():
              for_tg=False,
              add_timestamp=False)
 
-    manager = JobManager()
-
     for url_ in get_urls(urls_path):
         if url_.__eq__(''):
             continue
         if url_[0] not in wrong_chars:
-            manager.add_job(url_)
+            JobManager.add_job(url_)
 
     modules_: str = ""
 
@@ -126,7 +124,7 @@ async def main():
 
     if sum_ > 0:
 
-        manager.start_jobs()
+        JobManager.start_jobs()
 
         LogItOut(message_=f'\n🟢 STARTED: {sum_} jobs\n{modules_}\nv{ServiceData.ms_version}',
                  for_tg=True,
