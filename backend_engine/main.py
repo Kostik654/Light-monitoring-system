@@ -7,6 +7,7 @@ from asyncio import sleep, AbstractEventLoop
 from common_methods import GetExpectedCodes
 from logger import LogItOut
 from job_manager import JobManager
+from jobs_list import JobsList
 from ms_configs import TgBotPosterData, ServiceData
 from export_app import app
 
@@ -109,19 +110,19 @@ async def main():
 
     modules_: str = ""
 
-    if len(manager.get_mongo_jobs()) > 0:
-        modules_ += f"URL module loaded: {len(manager.get_url_jobs())}\n"
-    if len(manager.get_sip_jobs()) > 0:
-        modules_ += f"SIP module loaded: {len(manager.get_sip_jobs())}\n"
-    if len(manager.get_backbone_jobs()) > 0:
-        modules_ += f"B-URL module loaded: {len(manager.get_backbone_jobs())}\n"
-    if len(manager.get_mongo_jobs()) > 0:
-        modules_ += f"MONGO module loaded: {len(manager.get_mongo_jobs())}\n"
-    if len(manager.get_socket_jobs()) > 0:
-        modules_ += f"SOCKET module loaded: {len(manager.get_socket_jobs())}\n"
+    if len(JobsList.get_mongo_jobs()) > 0:
+        modules_ += f"URL module loaded: {len(JobsList.get_url_jobs())}\n"
+    if len(JobsList.get_sip_jobs()) > 0:
+        modules_ += f"SIP module loaded: {len(JobsList.get_sip_jobs())}\n"
+    if len(JobsList.get_backbone_jobs()) > 0:
+        modules_ += f"B-URL module loaded: {len(JobsList.get_backbone_jobs())}\n"
+    if len(JobsList.get_mongo_jobs()) > 0:
+        modules_ += f"MONGO module loaded: {len(JobsList.get_mongo_jobs())}\n"
+    if len(JobsList.get_socket_jobs()) > 0:
+        modules_ += f"SOCKET module loaded: {len(JobsList.get_socket_jobs())}\n"
 
-    sum_ = len(manager.get_url_jobs()) + len(manager.get_sip_jobs()) + len(manager.get_backbone_jobs()) + len(
-        manager.get_mongo_jobs()) + len(manager.get_socket_jobs())
+    sum_ = len(JobsList.get_url_jobs()) + len(JobsList.get_sip_jobs()) + len(JobsList.get_backbone_jobs()) + len(
+        JobsList.get_mongo_jobs()) + len(JobsList.get_socket_jobs())
 
     if sum_ > 0:
 
