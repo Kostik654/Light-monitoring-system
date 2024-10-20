@@ -1,4 +1,4 @@
-#import sys
+# import sys
 import time
 from asyncio import sleep
 
@@ -16,12 +16,12 @@ class MongoJob(Job):
     def __init__(self,
                  ipv4_address_: str,
                  port_: int,
-                 #dbs_: list[str],
+                 # dbs_: list[str],
                  sname_: str,
                  stype_: str,
                  awtime: int = 5,
                  interval_t: int = 60,
-                 mrole:str = 'primary',
+                 mrole: str = 'primary',
                  default_chat_id_: int = 0,
                  tg_tag_: str = "*"
                  ):
@@ -41,13 +41,12 @@ class MongoJob(Job):
         else:
             self.mongo_role = 'primary'
 
-
     def start_test(self, test_name: str) -> (bool, str, str, int):
         is_passed: bool = False
         message_: str = "START TEST"
         last_request_time = time.time()
         response_time = None
-        err_type = -1 # no error
+        err_type = -1  # no error
         client = MongoClient()
 
         try:
@@ -107,7 +106,6 @@ class MongoJob(Job):
 
         return message_, is_success
 
-
     async def start_job(self):
 
         self.running = True
@@ -119,7 +117,6 @@ class MongoJob(Job):
             if is_success:
                 is_for_tg = self.last_failed
 
-
                 self.last_failed = False
                 LogItOut(message_=message_,
                          for_tg=is_for_tg,
@@ -129,7 +126,7 @@ class MongoJob(Job):
 
                 prev_failed = self.last_failed
 
-                self.problems_counter() #  self.last_failed = True
+                self.problems_counter()  # self.last_failed = True
 
                 if not self.tg_tag.__eq__("*"):
                     message_ += f"\n{self.tg_tag}"

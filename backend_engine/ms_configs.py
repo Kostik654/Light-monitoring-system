@@ -17,7 +17,7 @@ class TgBotPosterData:
 
 class ServiceData:
 
-    ms_version: str = "1.0.1"
+    ms_version: str = "1.0.3 alfa"
     highlighter_pause: int = 7200
     highlighter_problems_pause: int = 900
 
