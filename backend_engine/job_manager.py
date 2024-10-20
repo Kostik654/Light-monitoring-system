@@ -25,19 +25,19 @@ class JobManager(JobManagerAbs):
         super().__init__()
 
     def get_url_jobs(self) -> list[UrlJob]:
-        return self.__url_jobs
+        return self.url_jobs
 
     def get_backbone_jobs(self) -> list[UrlJob]:
-        return self.__backbone_jobs
+        return self.backbone_jobs
 
     def get_sip_jobs(self) -> list[SipJob]:
-        return self.__sip_jobs
+        return self.sip_jobs
 
     def get_mongo_jobs(self) -> list[MongoJob]:
-        return self.__mongo_jobs
+        return self.mongo_jobs
 
     def get_socket_jobs(self) -> list[SocketJob]:
-        return self.__socket_jobs
+        return self.socket_jobs
 
     def add_url_job(self, job_splitted: list[str]):
 
@@ -63,7 +63,7 @@ class JobManager(JobManagerAbs):
                      default_chat_id_=int(job_splitted[7]),
                      tg_tag_=job_splitted[8])
 
-        self.__url_jobs.append(job)
+        self.url_jobs.append(job)
 
     def add_burl_job(self, job_splitted: list[str]):
 
@@ -89,7 +89,7 @@ class JobManager(JobManagerAbs):
                      default_chat_id_=int(job_splitted[8]),
                      tg_tag_=job_splitted[9])
 
-        self.__backbone_jobs.append(job)
+        self.backbone_jobs.append(job)
 
     def add_sip_job(self, job_splitted: list[str]):
 
@@ -115,7 +115,7 @@ class JobManager(JobManagerAbs):
             default_chat_id_=int(job_splitted[7]),
             tg_tag_=job_splitted[8])
 
-        self.__sip_jobs.append(job)
+        self.sip_jobs.append(job)
 
     def add_mongo_job(self, job_splitted: list[str]):
         if job_splitted[5] != '*':
@@ -137,7 +137,7 @@ class JobManager(JobManagerAbs):
             default_chat_id_=int(job_splitted[7]),
             tg_tag_=job_splitted[8])
 
-        self.__mongo_jobs.append(job)
+        self.mongo_jobs.append(job)
 
     def add_socket_job(self, job_splitted: list[str]):
         if job_splitted[4] != '*':
@@ -158,7 +158,7 @@ class JobManager(JobManagerAbs):
             default_chat_id_=int(job_splitted[6]),
             tg_tag_=job_splitted[7])
 
-        self.__socket_jobs.append(job)
+        self.socket_jobs.append(job)
 
     def add_job(self, job):
 
@@ -222,31 +222,31 @@ class JobManager(JobManagerAbs):
             return
 
     def start_jobs(self):
-        for ujob in self.__url_jobs:
+        for ujob in self.url_jobs:
             all_jobs.append(ujob)
             asyncio.create_task(ujob.start_job())
             LogItOut(message_=f'URL job started: {ujob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for sjob in self.__sip_jobs:
+        for sjob in self.sip_jobs:
             all_jobs.append(sjob)
             asyncio.create_task(sjob.start_job())
             LogItOut(message_=f'SIP job started: {sjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for bjob in self.__backbone_jobs:
+        for bjob in self.backbone_jobs:
             all_jobs.append(bjob)
             asyncio.create_task(bjob.start_job())
             LogItOut(message_=f'B-URL job started: {bjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for mjob in self.__mongo_jobs:
+        for mjob in self.mongo_jobs:
             all_jobs.append(mjob)
             asyncio.create_task(mjob.start_job())
             LogItOut(message_=f'MONGO job started: {mjob.job_name}',
                      for_tg=False,
                      add_timestamp=True)
-        for sktjob in self.__socket_jobs:
+        for sktjob in self.socket_jobs:
             all_jobs.append(sktjob)
             asyncio.create_task(sktjob.start_job())
             LogItOut(message_=f'SOCKET job started: {sktjob.job_name}',

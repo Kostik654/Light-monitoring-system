@@ -10,11 +10,11 @@ class JobManagerAbs(ABC):
 
     def __init__(self):
 
-        self.__url_jobs: list[UrlJob] = []
-        self.__backbone_jobs: list[UrlJob] = []
-        self.__sip_jobs: list[SipJob] = []
-        self.__mongo_jobs: list[MongoJob] = []
-        self.__socket_jobs: list[SocketJob] = []
+        self.url_jobs: list[UrlJob] = []
+        self.backbone_jobs: list[UrlJob] = []
+        self.sip_jobs: list[SipJob] = []
+        self.mongo_jobs: list[MongoJob] = []
+        self.socket_jobs: list[SocketJob] = []
 
         # defaults in secs
         self.sip_timeout_default = 15
