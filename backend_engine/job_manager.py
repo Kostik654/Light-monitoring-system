@@ -24,21 +24,6 @@ class JobManager(JobManagerAbs):
 
         super().__init__()
 
-    def get_url_jobs(self) -> list[UrlJob]:
-        return self.url_jobs
-
-    def get_backbone_jobs(self) -> list[UrlJob]:
-        return self.backbone_jobs
-
-    def get_sip_jobs(self) -> list[SipJob]:
-        return self.sip_jobs
-
-    def get_mongo_jobs(self) -> list[MongoJob]:
-        return self.mongo_jobs
-
-    def get_socket_jobs(self) -> list[SocketJob]:
-        return self.socket_jobs
-
     def add_url_job(self, job_splitted: list[str]):
 
         # expected_ans: str = job_splitted[4]

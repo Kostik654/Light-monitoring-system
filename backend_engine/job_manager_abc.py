@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from url_module import UrlJob
 from sip_module import SipJob
@@ -27,22 +27,17 @@ class JobManagerAbs(ABC):
         self.mongo_interval_default = 60
         self.socket_interval_default = 60
 
-    @abstractmethod
     def get_url_jobs(self) -> list[UrlJob]:
-        ...
+        return self.url_jobs
 
-    @abstractmethod
     def get_backbone_jobs(self) -> list[UrlJob]:
-        ...
+        return self.backbone_jobs
 
-    @abstractmethod
     def get_sip_jobs(self) -> list[SipJob]:
-        ...
+        return self.sip_jobs
 
-    @abstractmethod
     def get_mongo_jobs(self) -> list[MongoJob]:
-        ...
+        return self.mongo_jobs
 
-    @abstractmethod
     def get_socket_jobs(self) -> list[SocketJob]:
-        ...
+        return self.socket_jobs
